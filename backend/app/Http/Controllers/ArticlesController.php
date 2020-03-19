@@ -10,7 +10,7 @@ class ArticlesController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Article[]|\Illuminate\Database\Eloquent\Collection
      */
     public function index()
     {
@@ -33,7 +33,7 @@ class ArticlesController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return Article[]|\Illuminate\Database\Eloquent\Collection
      */
     public function store(Request $request)
     {
@@ -44,8 +44,10 @@ class ArticlesController extends Controller
         $article->body = $request->body;
         // 保存
         $article->save();
-        // 保存後 一覧ページへリダイレクト
-        // return redirect('/articles');
+
+        // $article = Article::all();
+
+        // return $article;
     }
 
     /**

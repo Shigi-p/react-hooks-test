@@ -100209,85 +100209,48 @@ var Example = function Example() {
     setBody(e.target.value);
   };
 
-  var sendArticle = function sendArticle() {
-    var params = {
-      title: title,
-      body: body
-    };
-    console.log("POST!");
-    console.log(title);
-    console.log(body);
-    axios__WEBPACK_IMPORTED_MODULE_3___default.a.post("/article", params).then(function (Response) {
-      console.log(Response);
-    })["catch"](function (error) {
-      console.log(error);
-    });
+  var sendArticle = function sendArticle(keyCode) {
+    if (keyCode === 13) {
+      var params = {
+        title: title,
+        body: body
+      };
+      axios__WEBPACK_IMPORTED_MODULE_3___default.a.post("/article", params).then(function (Response) {
+        console.log(Response);
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    }
   };
 
   Object(react__WEBPACK_IMPORTED_MODULE_1__["useEffect"])(function () {
-    console.log("This is useEffect function of GET");
-    var result = [];
-
-    var getArticles =
-    /*#__PURE__*/
-    function () {
-      var _ref = _asyncToGenerator(
-      /*#__PURE__*/
-      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
-        var response;
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
-          while (1) {
-            switch (_context.prev = _context.next) {
-              case 0:
-                _context.next = 2;
-                return axios__WEBPACK_IMPORTED_MODULE_3___default()("/article");
-
-              case 2:
-                response = _context.sent;
-                setArticles(response.data);
-
-              case 4:
-              case "end":
-                return _context.stop();
-            }
-          }
-        }, _callee);
-      }));
-
-      return function getArticles() {
-        return _ref.apply(this, arguments);
-      };
-    }(); // const getArticles = () => {
-    //         axios
-    //             .get("/article")
-    //             .then((Response) => {
-    //                 console.log(Response);
-    //                 result = Response.data;
-    //                 // setArticles(Response.data);
-    //                 // return Response.data;
-    //             })
-    //             .catch((error) => {
-    //                 console.log(error);
-    //             });
-    //     setArticles(result);
+    // const getArticles = async () => {
+    //     const response = await axios(
+    //         "/article",
+    //     );
+    //     setArticles(response.data);
     // };
-
-
-    getArticles();
-    return function () {
-      console.log("This is useEffect return function");
-    };
+    // getArticles();
+    axios__WEBPACK_IMPORTED_MODULE_3___default.a.get("/article").then(function (Response) {
+      if (Response.data.success) {
+        setArticles(Response.data);
+      } else {
+        console.log("ERROR");
+      }
+    })["catch"](function (error) {
+      console.log(error);
+    });
   }, []);
   Object(react__WEBPACK_IMPORTED_MODULE_1__["useEffect"])(function () {
     var deleteArticles =
     /*#__PURE__*/
     function () {
-      var _ref2 = _asyncToGenerator(
+      var _ref = _asyncToGenerator(
       /*#__PURE__*/
-      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
           while (1) {
-            switch (_context2.prev = _context2.next) {
+            switch (_context.prev = _context.next) {
               case 0:
                 console.log("DELETE!");
                 axios__WEBPACK_IMPORTED_MODULE_3___default.a["delete"]("/article/".concat(deleteId)).then(function (Response) {
@@ -100298,24 +100261,20 @@ var Example = function Example() {
 
               case 2:
               case "end":
-                return _context2.stop();
+                return _context.stop();
             }
           }
-        }, _callee2);
+        }, _callee);
       }));
 
       return function deleteArticles() {
-        return _ref2.apply(this, arguments);
+        return _ref.apply(this, arguments);
       };
     }();
 
     if (deleteId) {
       deleteArticles();
     }
-
-    return function () {
-      console.log("End delete useEffect");
-    };
   }, [deleteId]);
   return react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_4__["Grid"], {
     container: true,
@@ -100332,6 +100291,7 @@ var Example = function Example() {
     xs: 1
   }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_4__["TextField"], {
     label: "title",
+    margin: "normal",
     onChange: function onChange(e) {
       return handleTitleInputChanges(e);
     }
@@ -100340,8 +100300,12 @@ var Example = function Example() {
     xs: 1
   }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_4__["TextField"], {
     label: "body",
+    margin: "normal",
     onChange: function onChange(e) {
       return handleBodyInputChanges(e);
+    },
+    onKeyDown: function onKeyDown(e) {
+      return sendArticle(e.keyCode);
     }
   })), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_4__["Grid"], {
     item: true,
@@ -100350,7 +100314,7 @@ var Example = function Example() {
     variant: "contained",
     color: "primary",
     onClick: function onClick() {
-      return sendArticle();
+      return sendArticle(13);
     }
   }, "POST!"))), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_4__["Grid"], {
     container: true,
@@ -100365,7 +100329,9 @@ var Example = function Example() {
     }), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_4__["CardContent"], null, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("p", null, article.body), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_4__["Button"], {
       variant: "contained",
       color: "secondary",
-      onClick: setDeleteId(article.id)
+      onClick: function onClick() {
+        return setDeleteId(article.id);
+      }
     }, "DELETE!"))));
   })));
 };

@@ -8,7 +8,8 @@ import {
     Grid,
     Card,
     CardHeader,
-    CardContent
+    CardContent,
+    FormControl
 } from "@material-ui/core";
 
 const Example = () => {
@@ -25,58 +26,47 @@ const Example = () => {
         setBody(e.target.value);
     };
 
-    const sendArticle = () => {
-        let params = {
-            title: title,
-            body: body,
-        };
+    const sendArticle = (keyCode) => {
+        if(keyCode === 13) {
+            let params = {
+                title: title,
+                body: body,
+            };
 
-        console.log("POST!");
-        console.log(title);
-        console.log(body);
-
-        axios
-            .post("/article", params)
-            .then((Response) => {
-                console.log(Response);
-            })
-            .catch((error) => {
-                console.log(error);
-            });
+            axios
+                .post("/article", params)
+                .then((Response) => {
+                    console.log(Response);
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        }
     };
 
     useEffect(() => {
-        console.log("This is useEffect function of GET");
-        let result = [];
+        // const getArticles = async () => {
+        //     const response = await axios(
+        //         "/article",
+        //     );
 
-        const getArticles = async () => {
-            const response = await axios(
-                "/article",
-            );
-
-            setArticles(response.data);
-        };
-
-        // const getArticles = () => {
-        //         axios
-        //             .get("/article")
-        //             .then((Response) => {
-        //                 console.log(Response);
-        //                 result = Response.data;
-        //                 // setArticles(Response.data);
-        //                 // return Response.data;
-        //             })
-        //             .catch((error) => {
-        //                 console.log(error);
-        //             });
-        //     setArticles(result);
+        //     setArticles(response.data);
         // };
 
-        getArticles();
+        // getArticles();
 
-        return() => {
-            console.log("This is useEffect return function");
-        }
+	axios
+	    .get("/article")
+	    .then((Response) => {
+		if(Response.data.success){
+		    setArticles(Response.data);
+		}else{
+		    console.log("ERROR");
+		}
+	    })
+	    .catch((error) => {
+		console.log(error);
+	    });
     }, []);
 
     useEffect(() => {
@@ -91,14 +81,10 @@ const Example = () => {
                     console.log(error)
                 });
         };
+
         if(deleteId) {
             deleteArticles();
         }
-
-        return() => {
-            console.log("End delete useEffect");
-        }
-
     }, [deleteId]);
 
     return(
@@ -110,13 +96,16 @@ const Example = () => {
                     </Typography>
                 </Grid>
                 <Grid item xs={1}>
-                    <TextField label="title" onChange={(e) => handleTitleInputChanges(e)}/>
+                        <TextField label="title" margin="normal"
+                                   onChange={(e) => handleTitleInputChanges(e)}/>
                 </Grid>
                 <Grid item xs={1}>
-                    <TextField label="body" onChange={(e) => handleBodyInputChanges(e)}/>
+                    <TextField label="body" margin="normal"
+                               onChange={(e) => handleBodyInputChanges(e)}
+                               onKeyDown={(e) => sendArticle(e.keyCode)} />
                 </Grid>
                 <Grid item xs={1}>
-                    <Button variant="contained" color="primary" onClick={() => sendArticle()}>
+                    <Button variant="contained" color="primary" onClick={() => sendArticle(13)}>
                         POST!
                     </Button>
                 </Grid>
@@ -130,7 +119,7 @@ const Example = () => {
                                 </CardHeader>
                                 <CardContent>
                                     <p>{ article.body }</p>
-                                    <Button variant="contained" color="secondary" onClick={setDeleteId(article.id)}>
+                                    <Button variant="contained" color="secondary" onClick={() => setDeleteId(article.id)}>
                                         DELETE!
                                     </Button>
                                 </CardContent>
